@@ -9,24 +9,23 @@ import re
 import tempfile
 
 
-# Config
-VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
-ENV_FILE_PATH = '/srv/env'
-MOUNTS_UID = 48
-MOUNTS_GID = 48
-VG_USER_UID = MOUNTS_UID
-VG_USER_GID = MOUNTS_GID
+# Default ID for spawning subprocess, override in voltgrid.conf
+DEFAULT_UID = 48
+DEFAULT_GID = 48
+
+# Magic Vars
 GIT_EXCEPTION = 128
 
 
 class ConfigManager(object):
     """ Configuration Manager """
 
-    def __init__(self, cfg_file, env_file_path):
-        self.env_file_path = env_file_path
+    def __init__(self, cfg_file):
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
         self.local_config = json.load(open(cfg_file))
+        self.spawn_uid = self.local_config.get('spawn', {}).get('uid', DEFAULT_UID)
+        self.spawn_gid = self.local_config.get('spawn', {}).get('gid', DEFAULT_GID)
         super(self.__class__, self).__init__()
 
     @staticmethod
@@ -36,14 +35,16 @@ class ConfigManager(object):
                 f.write(line + '\n')
 
     def write_envs(self):
-        # Allow override git config from environment
-        git = self.local_config.get('git', None)
-        envs = list()
-        for key in self.environment.keys():
-            envs.append("%s=%s" % (key, os.environ[key]))
-            if re.search('^GIT', key, re.IGNORECASE):
-                git[key.lower()] = os.environ[key]
-        self.write_file(envs, self.env_file_path)
+        env_file_path = self.local_config.get('env_file_path', None)
+        if env_file_path is not None:
+            # Allow override git config from environment
+            git = self.local_config.get('git', None)
+            envs = list()
+            for key in self.environment.keys():
+                envs.append("%s=%s" % (key, os.environ[key]))
+                if re.search('^GIT', key, re.IGNORECASE):
+                    git[key.lower()] = os.environ[key]
+            self.write_file(envs, env_file_path)
 
 
 class GitManager(object):
@@ -195,7 +196,7 @@ def main(argv):
         os.execvp(arg[1], arg[1:])  # replace current process
 
     # Load config
-    c = ConfigManager(VG_CONF_PATH, ENV_FILE_PATH)
+    c = ConfigManager(os.path.join(os.path.abspath('.'), 'voltgrid.conf'))  # Assume same dir as voltgrid.py
     c.write_envs()
     config = c.config
     local_config = c.local_config
@@ -215,7 +216,7 @@ def main(argv):
     # Mount shares
     working_dir = dirs.get('working_dir')
     remote_dir = dirs.get('remote_dir')
-    m = MountManager(working_dir, remote_dir, MOUNTS_UID, MOUNTS_GID)
+    m = MountManager(working_dir, remote_dir, DEFAULT_UID, DEFAULT_GID)
     m.handle()
 
     # Write config from templates
@@ -226,7 +227,7 @@ def main(argv):
     # Spawn Next Process
     sys.stdout.flush()
     if len(argv) > 1:
-        execute(argv, VG_USER_UID, VG_USER_GID)
+        execute(argv, c.spawn_uid, c.spawn_gid)
 
 if __name__ == "__main__":
     main(argv=sys.argv)

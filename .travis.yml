@@ -10,8 +10,5 @@ python:
 install:
   - pip install -r requirements.txt
 
-before_script:
-  - cp voltgrid.conf.example voltgrid.conf
-
 script:
   - py.test -v
