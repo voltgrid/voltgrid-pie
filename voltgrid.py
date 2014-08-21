@@ -20,7 +20,9 @@ GIT_EXCEPTION = 128
 class ConfigManager(object):
     """ Configuration Manager """
 
-    def __init__(self, cfg_file):
+    def __init__(self, cfg_file=None):
+        # Assume same dir as voltgrid.py if not specified
+        cfg_file = cfg_file or os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'voltgrid.conf')
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
         self.local_config = json.load(open(cfg_file))
@@ -196,7 +198,7 @@ def main(argv):
         os.execvp(arg[1], arg[1:])  # replace current process
 
     # Load config
-    c = ConfigManager(os.path.join(os.path.abspath('.'), 'voltgrid.conf'))  # Assume same dir as voltgrid.py
+    c = ConfigManager()
     c.write_envs()
     config = c.config
     local_config = c.local_config
