@@ -216,9 +216,9 @@ class TemplateManager(object):
 
     def render_files(self):
         for f in self.files:
-            with tempfile.TemporaryFile(mode='w') as tmp_f:
+            with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_f:
                 tmp_f.write(self.render(f, self.context))
-            os.rename(tmp_f, f)
+            os.rename(tmp_f.name, f)
 
 
 def main(argv):
