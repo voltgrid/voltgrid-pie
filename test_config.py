@@ -4,9 +4,11 @@ import os
 
 from voltgrid import ConfigManager
 
+VG_CFG = 'voltgrid.conf.example'
+
 
 def test_config_manager():
-    c = ConfigManager('voltgrid.conf.example')
+    c = ConfigManager(VG_CFG)
     c.write_envs()
 
 
@@ -22,5 +24,5 @@ def test_config_not_exist():
 def test_git_config():
     git_url = 'git@github.com:voltgrid/voltgrid-pie.git'
     os.environ['GIT_URL'] = git_url
-    c = ConfigManager()
+    c = ConfigManager(VG_CFG)
     assert(c.git_url == git_url)
