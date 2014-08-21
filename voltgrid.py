@@ -30,13 +30,9 @@ class ConfigManager(object):
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
         self.local_config = self.load_local_config(cfg_file)
-        self.update_git_conf()
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
-        self.git_url = self.local_config.get('git', {}).get('git_url', None)
-        self.git_dst = self.local_config.get('git', {}).get('git_dst', None)
-        self.git_branch = self.local_config.get('git', {}).get('git_branch', None)
-        self.git_tag = self.local_config.get('git', {}).get('git_tag', None)
+        self.update_git_conf()
         super(self.__class__, self).__init__()
 
     @staticmethod
@@ -60,10 +56,18 @@ class ConfigManager(object):
 
     def update_git_conf(self):
         # Allow override git config from environment
+        self.git_cfg = self.local_config.get('git', {})
         git = self.local_config.get('git', {})
         for key in self.environment.keys():
             if re.search('^GIT', key, re.IGNORECASE):
-                git[key.lower()] = os.environ[key]
+                self.git_cfg[key.lower()] = os.environ[key]
+        # easier acces
+        self.git_url = self.git_cfg.get('git_url', None)
+        self.git_dst = self.git_cfg.get('git_dst', None)
+        self.git_branch = self.git_cfg.get('git_branch', None)
+        self.git_tag = self.git_cfg.get('git_tag', None)
+
+
 
     def write_envs(self):
         env_file_path = self.local_config.get('env_file_path', None)
