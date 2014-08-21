@@ -207,13 +207,17 @@ class TemplateManager(object):
             self.context = context
             super(self.__class__, self).__init__()
 
-    def render_files(self):
+    @staticmethod
+    def render(file, context):
         from jinja2 import Environment, FileSystemLoader
         environment = Environment(loader=FileSystemLoader(searchpath="/"))
+        template = environment.get_template(file)
+        return template.render(context)
+
+    def render_files(self):
         for f in self.files:
-            template = environment.get_template(f)
             with tempfile.TemporaryFile(mode='w') as tmp_f:
-                tmp_f.write(template.render(self.context))
+                tmp_f.write(self.render(f, self.context))
             os.rename(tmp_f, f)
 
 

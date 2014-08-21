@@ -1,7 +1,10 @@
 import tempfile
 import shutil
+import os
 
-from voltgrid import TemplateManager
+from voltgrid import TemplateManager, ConfigManager
+
+VG_CFG = 'voltgrid.conf.example'
 
 
 def test_template_manager():
@@ -9,3 +12,15 @@ def test_template_manager():
     context = {}
     t = TemplateManager(files, context)
     t.render_files()
+
+
+def test_template_render():
+    os.environ['CONFIG'] = '{"foo": "bar"}'  # Context
+    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template.example')
+    c = ConfigManager(VG_CFG)
+    files = (template, )
+    t = TemplateManager(files, c.config)
+    result = '/* This is just an example */\nfoo = bar'
+    assert(result == t.render(template, c.config))
+
+test_template_render()
