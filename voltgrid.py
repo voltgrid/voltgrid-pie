@@ -14,6 +14,7 @@ DEFAULT_UID = 48
 DEFAULT_GID = 48
 
 # Magic Vars
+CONFIG_EXCEPTION = 64
 GIT_EXCEPTION = 128
 
 
@@ -25,10 +26,21 @@ class ConfigManager(object):
         cfg_file = cfg_file or os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'voltgrid.conf')
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
-        self.local_config = json.load(open(cfg_file))
+        self.local_config = self.load_local_config(cfg_file)
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
         super(self.__class__, self).__init__()
+
+    @staticmethod
+    def load_local_config(cfg_file):
+        # Ignore errors with loading config
+        try:
+            config = json.load(open(cfg_file))
+        except ValueError:
+            config = {}
+        except FileNotFoundError:
+            config = {}
+        return config
 
     @staticmethod
     def write_file(data, path):
