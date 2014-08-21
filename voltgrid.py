@@ -231,8 +231,8 @@ def main(argv):
     c.write_envs()
     config = c.config
     local_config = c.local_config
-    files = local_config.get('files', [])
-    dirs = local_config.get('dirs', [])
+    files = local_config.get('files', {})
+    dirs = local_config.get('dirs', {})
 
     # Checkout Git
     if c.git_url is not None:
@@ -240,10 +240,11 @@ def main(argv):
         g.run()
 
     # Mount shares
-    working_dir = dirs.get('working_dir')
-    remote_dir = dirs.get('remote_dir')
-    m = MountManager(working_dir, remote_dir, DEFAULT_UID, DEFAULT_GID)
-    m.handle()
+    working_dir = dirs.get('working_dir', None)
+    remote_dir = dirs.get('remote_dir', None)
+    if working_dir is not None and remote_dir is not None:
+        m = MountManager(working_dir, remote_dir, DEFAULT_UID, DEFAULT_GID)
+        m.handle()
 
     # Write config from templates
     if len(files) > 0:
