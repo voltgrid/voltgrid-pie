@@ -30,6 +30,7 @@ class ConfigManager(object):
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
         self.local_config = self.load_local_config(cfg_file)
+        self.update_git_conf()
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
         self.git_url = self.local_config.get('git', {}).get('git_url', None)
@@ -57,16 +58,19 @@ class ConfigManager(object):
             for line in data:
                 f.write(line + '\n')
 
+    def update_git_conf(self):
+        # Allow override git config from environment
+        git = self.local_config.get('git', None)
+        for key in self.environment.keys():
+            if re.search('^GIT', key, re.IGNORECASE):
+                git[key.lower()] = os.environ[key]
+
     def write_envs(self):
         env_file_path = self.local_config.get('env_file_path', None)
         if env_file_path is not None:
-            # Allow override git config from environment
-            git = self.local_config.get('git', None)
             envs = list()
             for key in self.environment.keys():
                 envs.append("%s=%s" % (key, os.environ[key]))
-                if re.search('^GIT', key, re.IGNORECASE):
-                    git[key.lower()] = os.environ[key]
             self.write_file(envs, env_file_path)
 
 

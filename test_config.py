@@ -17,3 +17,10 @@ def test_config_is_empty():
 
 def test_config_not_exist():
     c = ConfigManager('does-not-exist')
+
+
+def test_git_config():
+    git_url = 'git@github.com:voltgrid/voltgrid-pie.git'
+    os.environ['GIT_URL'] = git_url
+    c = ConfigManager()
+    assert(c.git_url == git_url)
