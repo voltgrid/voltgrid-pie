@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - 2.6
+  - 2.7
+  - 3.2
+  - 3.3
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - cp voltgrid.conf.example voltgrid.conf
+
+script:
+  - py.test -v
