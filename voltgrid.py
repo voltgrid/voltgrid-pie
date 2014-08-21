@@ -29,6 +29,10 @@ class ConfigManager(object):
         self.local_config = self.load_local_config(cfg_file)
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
+        self.git_url = self.local_config.get('git', {}).get('git_url')
+        self.git_dst = self.local_config.get('git', {}).get('git_dst')
+        self.git_branch = self.local_config.get('git', {}).get('git_branch', None)
+        self.git_tag = self.local_config.get('git', {}).get('git_tag', None)
         super(self.__class__, self).__init__()
 
     @staticmethod
@@ -214,17 +218,12 @@ def main(argv):
     c.write_envs()
     config = c.config
     local_config = c.local_config
-    git = local_config.get('git', None)
     files = local_config.get('files', [])
     dirs = local_config.get('dirs', [])
 
     # Checkout Git
-    if 'git_url' in git:
-        git_url = git.get('git_url')
-        git_dst = git.get('git_dst')
-        git_branch = git.get('git_branch', None)
-        git_tag = git.get('git_tag', None)
-        g = GitManager(url=git_url, destination=git_dst, branch=git_branch, tag=git_tag)
+    if c.git_url:
+        g = GitManager(url=c.git_url, destination=c.git_dst, branch=c.git_branch, tag=c.git_tag)
         g.run()
 
     # Mount shares
