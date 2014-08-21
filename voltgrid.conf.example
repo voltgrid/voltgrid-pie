@@ -1,0 +1,9 @@
+{
+    "dirs": {
+        "working_dir": "/srv/git",
+        "remote_dir": "/srv/remote"
+    },
+    "git": {
+        "git_dst": "/srv/git"
+    }
+}
