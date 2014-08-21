@@ -32,8 +32,8 @@ class ConfigManager(object):
         self.local_config = self.load_local_config(cfg_file)
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
-        self.git_url = self.local_config.get('git', {}).get('git_url')
-        self.git_dst = self.local_config.get('git', {}).get('git_dst')
+        self.git_url = self.local_config.get('git', {}).get('git_url', None)
+        self.git_dst = self.local_config.get('git', {}).get('git_dst', None)
         self.git_branch = self.local_config.get('git', {}).get('git_branch', None)
         self.git_tag = self.local_config.get('git', {}).get('git_tag', None)
         super(self.__class__, self).__init__()
@@ -227,7 +227,7 @@ def main(argv):
     dirs = local_config.get('dirs', [])
 
     # Checkout Git
-    if c.git_url:
+    if c.git_url is not None:
         g = GitManager(url=c.git_url, destination=c.git_dst, branch=c.git_branch, tag=c.git_tag)
         g.run()
 
