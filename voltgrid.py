@@ -9,7 +9,7 @@ import re
 import tempfile
 
 
-# Default ID for spawning subprocess, override in voltgrid.conf
+# Default ID for spawning and mounting, override in voltgrid.conf
 DEFAULT_UID = 48
 DEFAULT_GID = 48
 
@@ -24,8 +24,8 @@ class ConfigManager(object):
         self.environment = os.environ
         self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
         self.local_config = json.load(open(cfg_file))
-        self.spawn_uid = self.local_config.get('spawn', {}).get('uid', DEFAULT_UID)
-        self.spawn_gid = self.local_config.get('spawn', {}).get('gid', DEFAULT_GID)
+        self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
+        self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
         super(self.__class__, self).__init__()
 
     @staticmethod

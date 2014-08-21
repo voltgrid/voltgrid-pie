@@ -6,7 +6,7 @@
     "git": {
         "git_dst": "/srv/git"
     },
-    "spawn": {
+    "user": {
         "uid": 48,
         "gid": 48
     },
