@@ -60,7 +60,7 @@ class ConfigManager(object):
 
     def update_git_conf(self):
         # Allow override git config from environment
-        git = self.local_config.get('git', None)
+        git = self.local_config.get('git', {})
         for key in self.environment.keys():
             if re.search('^GIT', key, re.IGNORECASE):
                 git[key.lower()] = os.environ[key]
