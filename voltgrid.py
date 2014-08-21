@@ -202,8 +202,8 @@ class MountManager(object):
 class TemplateManager(object):
     """ Templated Config File Manager """
 
-    def __init__(self, files, context):
-            self.files = list(files)
+    def __init__(self, files=None, context=None):
+            self.files = files
             self.context = context
             super(self.__class__, self).__init__()
 

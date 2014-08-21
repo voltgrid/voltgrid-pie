@@ -19,8 +19,6 @@ def test_template_render():
     template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template.example')
     c = ConfigManager(VG_CFG)
     files = (template, )
-    t = TemplateManager(files, c.config)
+    t = TemplateManager()
     result = '/* This is just an example */\nfoo = bar'
     assert(result == t.render(template, c.config))
-
-test_template_render()
