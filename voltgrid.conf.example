@@ -7,8 +7,8 @@
         "git_dst": "/srv/git"
     },
     "spawn": {
-        "uid": 418,
-        "gid": 428
+        "uid": 48,
+        "gid": 48
     },
     "env_file_path": ".env"
 }
