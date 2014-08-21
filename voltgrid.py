@@ -9,6 +9,9 @@ import re
 import tempfile
 
 
+# Config
+VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
+
 # Default ID for spawning and mounting, override in voltgrid.conf
 DEFAULT_UID = 48
 DEFAULT_GID = 48
@@ -41,8 +44,10 @@ class ConfigManager(object):
         try:
             config = json.load(open(cfg_file))
         except ValueError:
+            print('Could not parse config file %s' % cfg_file)
             config = {}
-        except FileNotFoundError:
+        except IOError:
+            print('Could not open config file %s' % cfg_file)
             config = {}
         return config
 
@@ -214,7 +219,7 @@ def main(argv):
         os.execvp(arg[1], arg[1:])  # replace current process
 
     # Load config
-    c = ConfigManager()
+    c = ConfigManager(VG_CONF_PATH)
     c.write_envs()
     config = c.config
     local_config = c.local_config
