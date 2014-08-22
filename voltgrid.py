@@ -215,10 +215,15 @@ class TemplateManager(object):
         return template.render(context)
 
     def render_files(self):
+        from stat import S_IMODE
         for f in self.files:
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_f:
                 tmp_f.write(self.render(f, self.context))
+            f_st = os.stat(f)
             os.rename(tmp_f.name, f)
+            os.chmod(f, S_IMODE(f_st.st_mode))
+            os.chown(f, f_st.st_uid, f_st.st_gid)
+            print("Rendered template %s with mode %d" % (f, int(oct(f_st.st_mode)[-4:])))
 
 
 def main(argv):
