@@ -4,7 +4,7 @@ import os
 
 from voltgrid import ConfigManager
 
-VG_CFG = 'voltgrid.conf.example'
+VG_CFG = 'voltgrid.conf'
 
 
 def test_config_manager():

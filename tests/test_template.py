@@ -4,8 +4,8 @@ import os
 
 from voltgrid import TemplateManager, ConfigManager
 
-VG_CFG = 'voltgrid.conf.example'
-
+VG_CFG = 'voltgrid.conf'
+VG_TEMPLATE = 'template.test'
 
 def test_template_manager():
     files = ()
@@ -16,7 +16,7 @@ def test_template_manager():
 
 def test_template_render():
     os.environ['CONFIG'] = '{"foo": "bar"}'  # Context
-    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template.example')
+    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), VG_TEMPLATE)
     c = ConfigManager(VG_CFG)
     files = (template, )
     t = TemplateManager()
