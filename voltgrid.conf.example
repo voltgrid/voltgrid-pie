@@ -10,5 +10,5 @@
         "uid": 48,
         "gid": 48
     },
-    "env_file_path": ".env"
+    "env_file_path": "/srv/.env"
 }
