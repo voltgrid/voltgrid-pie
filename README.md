@@ -1,15 +1,23 @@
-# Docker Magical Initialisation
+# Magical Initialisation
 
 [![Build Status](https://travis-ci.org/voltgrid/voltgrid-pie.svg?branch=master)](https://travis-ci.org/voltgrid/voltgrid-pie)
 
 _voltgrid.py_ provides a configuration based approach to code deployment.
 
+## Features
+
+ * Environment Variable Contextualisation
+ * Git checkout
+ * Configuration file templating
+
+## Docker Support
 
 When used with [Docker](https://www.docker.com/) _voltgrid.py_ can handle 100% of your container bootstraping and code deployment.
 
 Here is a Docker example that uses [bureaucrat](https://github.com/adlibre/python-bureaucrat) for process management and environment contextualisation:
 
-### Example
+
+### Example _Dockerfile_
 
     # Volt Grid: Volt Grid Pie / Bureaucrat Example
     #
@@ -52,7 +60,7 @@ Here is a Docker example that uses [bureaucrat](https://github.com/adlibre/pytho
 
     docker build -t voltgrid/example .
 
-#### Deploy
+#### Deploy the container
 
 
 To deploy the [Django Sample app](https://github.com/adlibre/voltgrid-django-sample):
