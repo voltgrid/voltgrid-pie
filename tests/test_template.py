@@ -7,6 +7,7 @@ from voltgrid import TemplateManager, ConfigManager
 VG_CFG = 'voltgrid.conf'
 VG_TEMPLATE = 'template.test'
 
+
 def test_template_manager():
     files = ()
     context = {}
