@@ -28,7 +28,12 @@ class ConfigManager(object):
         # Assume same dir as voltgrid.py if not specified
         cfg_file = cfg_file or os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'voltgrid.conf')
         self.environment = os.environ
-        self.config = json.loads(os.getenv('CONFIG', '{}'))  # defaults
+        if os.getenv('CONFIG') is not None:
+            self.config = json.loads(os.getenv('CONFIG'))
+        else:
+            self.config = {}
+            for key in self.environment.keys():
+                self.config[key.lower()] = os.environ[key]
         self.local_config = self.load_local_config(cfg_file)
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
@@ -212,6 +217,9 @@ class TemplateManager(object):
     def render(file, context):
         from jinja2 import Environment, FileSystemLoader
         environment = Environment(loader=FileSystemLoader(searchpath="/"))
+        def from_json(value):
+            return json.loads(value)
+        environment.filters['from_json'] = from_json
         template = environment.get_template(file)
         return template.render(context)
 
