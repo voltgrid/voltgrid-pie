@@ -33,7 +33,7 @@ class ConfigManager(object):
         else:
             self.config = {}
             for key in self.environment.keys():
-                self.config[key.lower()] = os.environ[key]
+                self.config[key] = os.environ[key]
         self.local_config = self.load_local_config(cfg_file)
         self.spawn_uid = self.local_config.get('user', {}).get('uid', DEFAULT_UID)
         self.spawn_gid = self.local_config.get('user', {}).get('gid', DEFAULT_GID)
@@ -215,12 +215,17 @@ class TemplateManager(object):
 
     @staticmethod
     def render(file, context):
-        from jinja2 import Environment, FileSystemLoader
+        from jinja2 import Environment, FileSystemLoader, contextfunction
         environment = Environment(loader=FileSystemLoader(searchpath="/"))
         def from_json(value):
             return json.loads(value)
+        @contextfunction
+        def get_context(c):
+            return c
         environment.filters['from_json'] = from_json
         template = environment.get_template(file)
+        template.globals['context'] = get_context
+        template.globals['callable'] = callable
         return template.render(context)
 
     def render_files(self):
