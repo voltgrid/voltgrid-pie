@@ -72,8 +72,6 @@ class ConfigManager(object):
         self.git_branch = self.git_cfg.get('git_branch', None)
         self.git_tag = self.git_cfg.get('git_tag', None)
 
-
-
     def write_envs(self):
         env_file_path = self.local_config.get('env_file_path', None)
         if env_file_path is not None:
@@ -99,13 +97,12 @@ class GitManager(object):
 
     def get_commands(self):
         git_commands = list()
-        # Initialise clone
-        git_commands.append(['git', 'clone', self.url, '.'])
-        # Update to branch or tag
         if self.tag is not None:
-            git_commands.append(['git', 'checkout', 'tags/%s' % self.tag])
+            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.tag, self.url, '.'])  # detached HEAD
         elif self.branch is not None:
-            git_commands.append(['git', 'checkout', self.branch])
+            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.branch, self.url, '.'])
+        else:
+            git_commands.append(['git', 'clone', '--depth=1', self.url, '.'])
         # Update submodules
         git_commands.append(['git', 'submodule', 'update', '--init'])
         return git_commands
@@ -120,7 +117,7 @@ class GitManager(object):
         for cmd in self.get_commands():
             return_code = self.call(cmd, cwd=self.destination)
             if return_code != 0:
-                raise self.GitException('Git command failed')
+                raise self.GitException('Git command failed: %s' % ' '.join(cmd))
 
 
 class MountManager(object):
