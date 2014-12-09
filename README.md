@@ -26,12 +26,12 @@ Clone this repo into the root of a virtualenv.
 
 1. Install the requirements
 
-    pip install -r requirements.txt
+    `pip install -r requirements.txt`
 
 2. Hack away.
 
 3. Test
 
-    test -v tests
+    `test -v tests`
 
 4. Commit your changes
