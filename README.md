@@ -19,3 +19,19 @@ When used with [Docker](https://www.docker.com/) _voltgrid.py_ can handle 100% o
 [Ubuntu PHP](examples/ubuntu/README.md)
 
 [Python Bureaucrat](examples/python-bureaucrat.md)
+
+## Development and testing
+
+Clone this repo into the root of a virtualenv.
+
+1. Install the requirements
+
+    pip install -r requirements.txt
+
+2. Hack away.
+
+3. Test
+
+    test -v tests
+
+4. Commit your changes
