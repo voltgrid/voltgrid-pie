@@ -66,11 +66,12 @@ class ConfigManager(object):
         for key in self.environment.keys():
             if re.search('^GIT', key, re.IGNORECASE):
                 self.git_cfg[key.lower()] = os.environ[key]
-        # easier acces
+        # easier access
         self.git_url = self.git_cfg.get('git_url', None)
         self.git_dst = self.git_cfg.get('git_dst', None)
         self.git_branch = self.git_cfg.get('git_branch', None)
         self.git_tag = self.git_cfg.get('git_tag', None)
+        self.git_hash = self.git_cfg.get('git_hash', None)
 
     def write_envs(self):
         env_file_path = self.local_config.get('env_file_path', None)
@@ -84,11 +85,12 @@ class ConfigManager(object):
 class GitManager(object):
     """ Manager for git operations """
 
-    def __init__(self, url, destination, branch=None, tag=None):
+    def __init__(self, url, destination, branch=None, tag=None, hash=None):
         self.url = url
         self.destination = destination
         self.branch = branch
         self.tag = tag
+        self.hash = hash
         super(self.__class__, self).__init__()
 
     class GitException(Exception):
@@ -97,7 +99,11 @@ class GitManager(object):
 
     def get_commands(self):
         git_commands = list()
-        if self.tag is not None:
+        if self.hash is not None:
+            # It's not possible to do a sparse clone when we need a specific commit hash
+            git_commands.append(['git', 'clone', self.url, '.'])
+            git_commands.append(['git', 'checkout', self.hash])
+        elif self.tag is not None:
             git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.tag, self.url, '.'])  # detached HEAD
         elif self.branch is not None:
             git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.branch, self.url, '.'])
@@ -256,7 +262,7 @@ def main(argv):
 
     # Checkout Git
     if c.git_url is not None:
-        g = GitManager(url=c.git_url, destination=c.git_dst, branch=c.git_branch, tag=c.git_tag)
+        g = GitManager(url=c.git_url, destination=c.git_dst, branch=c.git_branch, tag=c.git_tag, hash=c.hash)
         g.run()
 
     # Mount shares
