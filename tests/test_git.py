@@ -6,7 +6,7 @@ from voltgrid import GitManager
 
 def git_checkout(git_url, git_branch=None, git_tag=None, git_hash=None):
     git_dst = tempfile.mkdtemp()
-    g = GitManager(url=git_url, destination=git_dst, branch=git_branch, tag=git_tag, hash=git_hash)
+    g = GitManager(url=git_url, git_dst=git_dst, git_branch=git_branch, git_tag=git_tag, git_hash=git_hash)
     g.run()
     shutil.rmtree(git_dst)
 

@@ -85,12 +85,12 @@ class ConfigManager(object):
 class GitManager(object):
     """ Manager for git operations """
 
-    def __init__(self, url, destination, branch=None, tag=None, hash=None):
+    def __init__(self, url, git_dst, git_branch=None, git_tag=None, git_hash=None):
         self.url = url
-        self.destination = destination
-        self.branch = branch
-        self.tag = tag
-        self.hash = hash
+        self.git_dst = git_dst
+        self.git_branch = git_branch
+        self.git_tag = git_tag
+        self.git_hash = git_hash
         super(self.__class__, self).__init__()
 
     class GitException(Exception):
@@ -99,14 +99,14 @@ class GitManager(object):
 
     def get_commands(self):
         git_commands = list()
-        if self.hash is not None:
+        if self.git_hash is not None:
             # It's not possible to do a sparse clone when we need a specific commit hash
             git_commands.append(['git', 'clone', self.url, '.'])
-            git_commands.append(['git', 'checkout', self.hash])
-        elif self.tag is not None:
-            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.tag, self.url, '.'])  # detached HEAD
-        elif self.branch is not None:
-            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.branch, self.url, '.'])
+            git_commands.append(['git', 'checkout', self.git_hash])
+        elif self.git_tag is not None:
+            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.git_tag, self.url, '.'])  # detached HEAD
+        elif self.git_branch is not None:
+            git_commands.append(['git', 'clone', '--depth=1', '-b', '%s' % self.git_branch, self.url, '.'])
         else:
             git_commands.append(['git', 'clone', '--depth=1', self.url, '.'])
         # Update submodules
@@ -121,7 +121,7 @@ class GitManager(object):
 
     def run(self):
         for cmd in self.get_commands():
-            return_code = self.call(cmd, cwd=self.destination)
+            return_code = self.call(cmd, cwd=self.git_dst)
             if return_code != 0:
                 raise self.GitException('Git command failed: %s' % ' '.join(cmd))
 
@@ -262,7 +262,7 @@ def main(argv):
 
     # Checkout Git
     if c.git_url is not None:
-        g = GitManager(url=c.git_url, destination=c.git_dst, branch=c.git_branch, tag=c.git_tag, hash=c.hash)
+        g = GitManager(url=c.git_url, git_dst=c.git_dst, git_branch=c.git_branch, git_tag=c.git_tag, git_hash=c.git_hash)
         g.run()
 
     # Mount shares
