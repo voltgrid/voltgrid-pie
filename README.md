@@ -32,6 +32,6 @@ Clone this repo into the root of a virtualenv.
 
 3. Test
 
-    `test -v tests`
+    `py.test -v tests`
 
 4. Commit your changes
