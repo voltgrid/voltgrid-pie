@@ -8,6 +8,7 @@ import shutil
 import re
 import tempfile
 
+__version__ = 1
 
 # Config
 VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
