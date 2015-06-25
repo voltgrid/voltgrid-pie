@@ -250,6 +250,8 @@ def main(argv):
         print("Replacing current process with: %s" % arg[1])
         os.setgid(group)
         os.setuid(user)
+        print('Unsetting HOME')
+        del os.environ['HOME']
         print("Running as %s:%s" % (os.geteuid(), os.getegid()))
         os.execvp(arg[1], arg[1:])  # replace current process
 
