@@ -186,8 +186,8 @@ class MountManager(object):
         if mount_file_path:
             mounts_list = self.get_mounts(mount_file_path)
         else:
-            mounts_list = None
-            return False
+            # Mount working_dir to remote_dir
+            mounts_list = ((self.remote, self.base))
 
         for (remote_dir, mount_dir) in mounts_list:
             # Some check to ensure mount_dir (local) is not going into a remote dir
