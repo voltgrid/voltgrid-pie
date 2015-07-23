@@ -251,15 +251,20 @@ class TemplateManager(object):
 def main(argv):
 
     def execute(arg, user, group):
+        # Update home to correct value incase it was inherited
+        home = pwd.getpwuid(user)[5]  # Users home directory
+        print("Updating HOME to %s" % home)
+        os.environ['HOME'] = home
         print("Replacing current process with: %s" % arg[1])
         os.setgid(group)
         os.setuid(user)
         print("Running as %s:%s" % (os.geteuid(), os.getegid()))
         os.execvp(arg[1], arg[1:])  # replace current process
 
+    # Unset home incase it was inherited 
     print('Unsetting HOME')
     del os.environ['HOME']
-
+    
     # Load config
     c = ConfigManager(VG_CONF_PATH)
     c.write_envs()
