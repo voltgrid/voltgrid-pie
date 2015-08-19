@@ -16,9 +16,9 @@ When used with [Docker](https://www.docker.com/) _voltgrid.py_ can handle 100% o
 
 ## Examples
 
-[Ubuntu PHP](examples/ubuntu/README.md)
+[Ubuntu PHP](docs/examples/ubuntu/README.md)
 
-[Python Bureaucrat](examples/python-bureaucrat.md)
+[Python Bureaucrat](docs/examples/python-bureaucrat.md)
 
 ## Development and testing
 

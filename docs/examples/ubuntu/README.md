@@ -1,12 +1,17 @@
-Build Example
+# Ubuntu Apache PHP Example
+
+This is an example of using `voltgrid.py` with a PHP application running on Ubuntu.
+
+## Build Example
 
 ```
 git clone https://github.com/voltgrid/voltgrid-pie
-cd voltgrid-pie/examples/ubuntu
+cd voltgrid-pie/docs/examples/ubuntu
 docker built -t voltgrid-pie-example .
 ```
 
-Run examples
+## Run example
+
 ```
 # Simple start
 $ docker run --rm -ti -p 8080:8080 voltgrid-pie-example
