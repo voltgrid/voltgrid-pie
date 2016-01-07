@@ -80,7 +80,9 @@ class ConfigManager(object):
         if env_file_path is not None:
             envs = list()
             for key in self.environment.keys():
-                envs.append("%s=%s" % (key, os.environ[key]))
+                # Don't set inherited environment variables that dont need to be configured
+                if key not in ['HOME', 'PATH']:
+                    envs.append("%s=%s" % (key, os.environ[key]))
             self.write_file(envs, env_file_path)
 
 
@@ -263,7 +265,7 @@ def main(argv):
         os.execvp(arg[1], arg[1:])  # replace current process
 
     # Unset inherited environment variables that dont need to be configured
-    for e in ['HOME', 'PATH']:
+    for e in ['HOME',]:
         print("Unsetting %s" % e)
         del os.environ[e]
     
