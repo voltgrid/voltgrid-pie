@@ -262,9 +262,10 @@ def main(argv):
         print("Running as %s:%s" % (os.geteuid(), os.getegid()))
         os.execvp(arg[1], arg[1:])  # replace current process
 
-    # Unset home incase it was inherited 
-    print('Unsetting HOME')
-    del os.environ['HOME']
+    # Unset inherited environment variables that dont need to be configured
+    for e in ['HOME', 'PATH']:
+        print("Unsetting %s" % e)
+        del os.environ[e]
     
     # Load config
     c = ConfigManager(VG_CONF_PATH)
