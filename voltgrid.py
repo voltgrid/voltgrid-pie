@@ -245,6 +245,9 @@ class TemplateManager(object):
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_f:
                 tmp_f.write(self.render(f, self.context))
             f_st = os.stat(f)
+            root, ext = os.path.splitext(f)
+            if ext == ".j2":
+                f = root
             os.rename(tmp_f.name, f)
             os.chmod(f, S_IMODE(f_st.st_mode))
             os.chown(f, f_st.st_uid, f_st.st_gid)
