@@ -67,7 +67,7 @@ class ConfigManager(object):
             for line in data:
                 f.write(line + '\n')
 
-    def update_git_conf(self):
+    def load_git_conf(self):
         # Allow override git config from environment
         self.git_cfg = self.local_config.get('git', {})
         git = self.local_config.get('git', {})
@@ -309,7 +309,7 @@ def main(argv):
     c = ConfigManager(VG_CONF_PATH)
     c.load_envs()
     c.load_config()
-    c.update_git_conf()
+    c.load_git_conf()
     local_config = c.local_config
     files = local_config.get('files', {})
     dirs = local_config.get('dirs', {})
