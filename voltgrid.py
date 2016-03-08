@@ -8,6 +8,8 @@ import subprocess
 import shutil
 import re
 import tempfile
+from distutils.dir_util import copy_tree
+
 
 __version__ = 1
 
@@ -207,6 +209,16 @@ class MountManager(object):
                 os.makedirs(remote_dir)
                 if remote_dir != self.remote:
                     os.chown(remote_dir, self.mount_uid, self.mount_gid)
+            # Copy mount_dir to remote, if remote is empty, and mount_dir has files
+            if not os.listdir(remote_dir) and os.listdir(mount_dir):
+                # use copy_tree because shutil.copytree doesn't like it when the dst exists
+                copy_tree(mount_dir, remote_dir)
+                # Fix permissions recursively
+                for root, dirs, files in os.walk(remote_dir):
+                    for item in dirs:
+                        os.chown(os.path.join(root, item), self.mount_uid, self.mount_gid)
+                    for item in files:
+                        os.chown(os.path.join(root, item), self.mount_uid, self.mount_gid)
             # Delete mount_dir if exists. Create symlink to remote_dir
             if os.path.isfile(mount_dir) or os.path.islink(mount_dir):
                 os.remove(mount_dir)
@@ -271,7 +283,7 @@ def main(argv):
     for e in ['HOME',]:
         print("Unsetting %s" % e)
         del os.environ[e]
-    
+
     # Load config
     c = ConfigManager(VG_CONF_PATH)
     c.write_envs()
