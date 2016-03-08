@@ -81,7 +81,6 @@ class ConfigManager(object):
         self.git_tag = self.git_cfg.get('git_tag', None)
         self.git_hash = self.git_cfg.get('git_hash', None)
 
-    # This it not used anymore
     def write_envs(self):
         env_file_path = self.local_config.get('env_file_path', None)
         if env_file_path is not None:
@@ -308,6 +307,7 @@ def main(argv):
     # Load config
     c = ConfigManager(VG_CONF_PATH)
     c.load_envs()
+    c.write_envs()
     c.load_config()
     c.load_git_conf()
     local_config = c.local_config
