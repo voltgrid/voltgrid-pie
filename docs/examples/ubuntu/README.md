@@ -7,7 +7,7 @@ This is an example of using `voltgrid.py` with a PHP application running on Ubun
 ```
 git clone https://github.com/voltgrid/voltgrid-pie
 cd voltgrid-pie/docs/examples/ubuntu
-docker built -t voltgrid-pie-example .
+docker build -t voltgrid-pie-example .
 ```
 
 ## Run example
