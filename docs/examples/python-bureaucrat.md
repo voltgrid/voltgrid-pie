@@ -44,9 +44,9 @@
 #### Deploy the container
 
 
-To deploy the [Django Sample app](https://github.com/adlibre/voltgrid-django-sample):
+To deploy the [Django Sample app](https://github.com/voltgrid/voltgrid-django-sample):
 
-    docker run -P -e "GIT_URL=https://github.com/adlibre/voltgrid-django-sample.git" \
+    docker run -P -e "GIT_URL=https://github.com/voltgrid/voltgrid-django-sample.git" \
       -e "DEBUG=True" \
       -e "PORT=8000" \
       -e "SECRET_KEY=secret" \
