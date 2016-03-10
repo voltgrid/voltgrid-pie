@@ -1,8 +1,8 @@
-# Magical Deployments
+# voltgrid.py: Runtime deployments (aka Magical Deployments with Docker)
 
 [![Build Status](https://travis-ci.org/voltgrid/voltgrid-pie.svg?branch=master)](https://travis-ci.org/voltgrid/voltgrid-pie)
 
-_voltgrid.py_ provides a configuration based approach to code deployment and configuration.
+_voltgrid.py_ provides a configuration based approach to code deployment and configuration. It allows for application code to be deployed at runtime.
 
 ## Features
 
