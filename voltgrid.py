@@ -229,10 +229,10 @@ class MountManager(object):
                 if remote_dir != self.remote:
                     os.chown(remote_dir, self.mount_uid, self.mount_gid)
             # Copy mount_dir to remote, if remote is empty, and mount_dir has files
-            if not os.listdir(remote_dir) and os.listdir(mount_dir):
+            if os.path.exists(mount_dir) and os.listdir(mount_dir) and not os.listdir(remote_dir):
                 # use copy_tree because shutil.copytree doesn't like it when the dst exists
                 copy_tree(mount_dir, remote_dir)
-                # Fix permissions recursively
+                # Fix permissions recursively in remote_dir
                 for root, dirs, files in os.walk(remote_dir):
                     for item in dirs:
                         os.chown(os.path.join(root, item), self.mount_uid, self.mount_gid)
