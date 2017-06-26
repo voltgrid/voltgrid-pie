@@ -265,6 +265,10 @@ class TemplateManager(object):
         def get_context(c):
             return c
         environment.filters['from_json'] = from_json
+        # fix issue w/ UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 1: ordinal not in range(128)
+        if (sys.version_info < (3, 0)):
+            reload(sys)
+            sys.setdefaultencoding("UTF-8")
         template = environment.get_template(file)
         template.globals['context'] = get_context
         template.globals['callable'] = callable
@@ -273,8 +277,13 @@ class TemplateManager(object):
     def render_files(self):
         from stat import S_IMODE
         for f in self.files:
-            with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_f:
-                tmp_f.write(self.render(f, self.context))
+            with tempfile.NamedTemporaryFile(mode='wb', delete=False) as tmp_f:
+                output = self.render(f, self.context)
+                if (sys.version_info > (3, 0)):
+                    tmp_f.write(bytes(self.render(f, self.context), 'UTF-8'))  # python 3
+                else:
+                    tmp_f.write(output)  # python 2
+
             f_st = os.stat(f)
             root, ext = os.path.splitext(f)
             if ext == ".j2":
