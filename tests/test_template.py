@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import tempfile
 import shutil
 import os
@@ -20,7 +22,16 @@ def test_template_render():
     template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), VG_TEMPLATE)
     c = ConfigManager(VG_CFG)
     c.load_config()
-    files = (template, )
     t = TemplateManager()
     result = '/* This is just an example */\nfoo = bar'
     assert(result == t.render(template, c.config))
+
+
+def test_template_render_unicode():
+    os.environ['CONFIG'] = '{"USERNAME": "Héctor"}'  # Context
+    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template.environment.test')
+    c = ConfigManager(VG_CFG)
+    c.load_config()
+    t = TemplateManager()
+    result = t.render(template, c.config)
+    assert('USERNAME=Héctor' in result)
