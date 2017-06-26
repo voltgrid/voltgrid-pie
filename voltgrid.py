@@ -11,7 +11,7 @@ import tempfile
 from distutils.dir_util import copy_tree
 
 
-__version__ = 1
+__version__ = '1.0.6'
 
 # Config
 VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
