@@ -11,10 +11,10 @@ import tempfile
 from distutils.dir_util import copy_tree
 
 
-__version__ = '1.0.7'
+__version__ = '1.0.8'
 
 # Config
-VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
+VG_CONF_PATH = os.environ.get('VG_CONF_PATH', '/usr/local/etc/voltgrid.conf')
 
 # Default ID for spawning and mounting, override in voltgrid.conf
 DEFAULT_UID = 48
@@ -45,7 +45,11 @@ class ConfigManager(object):
         else:
             self.config = {}
             for key in self.environment.keys():
-                self.config[key] = os.environ[key]
+                # remove crlf from environment variables
+                value = str(os.environ[key])
+                value = ''.join(value.splitlines())
+                value = value.strip('\r\n')
+                self.config[key] = value
 
     @staticmethod
     def load_local_config(cfg_file):

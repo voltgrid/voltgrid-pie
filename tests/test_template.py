@@ -29,7 +29,7 @@ def test_template_render():
 
 def test_template_render_unicode():
     os.environ['CONFIG'] = '{"USERNAME": "Héctor"}'  # Context
-    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template.environment.test')
+    template = '%s' % os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'template_test_unicode')
     c = ConfigManager(VG_CFG)
     c.load_config()
     t = TemplateManager()
