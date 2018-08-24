@@ -4,7 +4,7 @@ import os
 
 from voltgrid import ConfigManager
 
-VG_CFG = 'voltgrid.conf'
+VG_CFG = os.path.join(os.path.abspath(os.path.split(__file__)[0]), 'voltgrid.conf')
 
 
 def test_config_manager():
@@ -38,3 +38,11 @@ def test_git_config_no_vgconf():
     c.load_git_conf()
     assert(c.git_url == git_url)
     assert(c.git_dst == git_dst)
+
+
+def test_strip_crlf():
+    os.environ['VG_CONF_PATH'] = VG_CFG
+    os.environ['MYVARIABLE'] = '\r\nfoo \nbar\r'  # Context
+    c = ConfigManager(VG_CFG)
+    c.load_config()
+    assert(c.config['MYVARIABLE'] == 'foo bar')
