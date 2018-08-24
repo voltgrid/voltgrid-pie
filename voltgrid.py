@@ -11,7 +11,7 @@ import tempfile
 from distutils.dir_util import copy_tree
 
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'
 
 # Config
 VG_CONF_PATH = '/usr/local/etc/voltgrid.conf'
@@ -30,7 +30,6 @@ class ConfigManager(object):
 
     config = {}
     environment = os.environ
-
 
     def __init__(self, cfg_file=None):
         # Assume same dir as voltgrid.py if not specified
@@ -308,6 +307,15 @@ def main(argv):
         sys.stdout.flush()
         os.execvpe(arg[1], arg[1:], os.environ)  # replace current process, inherit environment
 
+    def vg_debug():
+        debug = bool(os.environ.get('VOLTGRID_PIE_DEBUG', 'False').lower() in ("true", "yes", "t", "1"))
+        print("voltgrid.py debug %s" % str(debug))
+        if debug:
+            for env in os.environ:
+                val = os.getenv(env)
+                print("Environment: %s='%s'" % (env, val))
+        return debug
+
     # Unset inherited environment variables that dont need to be configured
     for e in ['HOME',]:
         print("Unsetting %s" % e)
@@ -322,6 +330,8 @@ def main(argv):
     local_config = c.local_config
     files = local_config.get('files', {})
     dirs = local_config.get('dirs', {})
+
+    VOLTGRID_PIE_DEBUG = vg_debug()
 
     # Checkout Git
     if c.git_url is not None:

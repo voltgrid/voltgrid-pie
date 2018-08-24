@@ -1,5 +1,9 @@
 # Configuration
 
+### Environment
+
+- `VOLTGRID_PIE_DEBUG` set to `true` to enable environment variable debugging.
+
 ### voltgrid.conf
 
 An example is provided [here](examples/voltgrid.conf.example).
